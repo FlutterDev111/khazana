@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:email_validator/email_validator.dart';
+import '../../../../features/dashboard/presentation/pages/dashboard_page.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/custom_text_field.dart';
+import '../widgets/custom_password_field.dart';
 import 'signup_page.dart';
 
 class LoginPage extends StatefulWidget {
@@ -30,11 +33,11 @@ class _LoginPageState extends State<LoginPage> {
   void _onLoginPressed() {
     if (_formKey.currentState?.validate() ?? false) {
       context.read<AuthBloc>().add(
-            SignInRequested(
-              email: _emailController.text.trim(),
-              password: _passwordController.text.trim(),
-            ),
-          );
+        SignInRequested(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        ),
+      );
     }
   }
 
@@ -45,11 +48,19 @@ class _LoginPageState extends State<LoginPage> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state.status == AuthStatus.authenticated) {
-            // TODO: Navigate to home page
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const DashboardPage(),
+              ),
+            );
           }
           if (state.errorMessage != null) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.errorMessage!)),
+              SnackBar(
+                content: Text(state.errorMessage!),
+                backgroundColor: Colors.red,
+              ),
             );
           }
         },
@@ -91,33 +102,22 @@ class _LoginPageState extends State<LoginPage> {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your email';
                         }
-                        if (!value.contains('@')) {
+                        if (!EmailValidator.validate(value)) {
                           return 'Please enter a valid email';
                         }
                         return null;
                       },
                     ),
                     const SizedBox(height: 16),
-                    CustomTextField(
+                    CustomPasswordField(
                       controller: _passwordController,
                       hintText: 'Password',
-                      prefixIcon: Icons.lock_outline,
-                      obscureText: true,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your password';
-                        }
-                        if (value.length < 6) {
-                          return 'Password must be at least 6 characters';
-                        }
-                        return null;
-                      },
                     ),
                     const SizedBox(height: 24),
                     BlocBuilder<AuthBloc, AuthState>(
                       builder: (context, state) {
                         return CustomButton(
-                          onPressed: _onLoginPressed,
+                          onPressed: state.status == AuthStatus.loading ? null : _onLoginPressed,
                           text: 'Login',
                           isLoading: state.status == AuthStatus.loading,
                         );
@@ -138,7 +138,10 @@ class _LoginPageState extends State<LoginPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const SignupPage(),
+                                builder: (_) => BlocProvider.value(
+                                  value: context.read<AuthBloc>(),
+                                  child: const SignupPage(),
+                                ),
                               ),
                             );
                           },

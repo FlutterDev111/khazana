@@ -1,16 +1,18 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'core/config/supabase_config.dart';
 import 'core/error/failures.dart';
+import 'features/auth/data/repositories/supabase_auth_repository.dart';
 import 'features/auth/domain/entities/user.dart';
-import 'features/auth/domain/repositories/auth_repository.dart';
 import 'features/auth/domain/usecases/sign_in.dart';
 import 'features/auth/domain/usecases/sign_up.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 import 'features/auth/presentation/pages/login_page.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SupabaseConfig.initialize();
   runApp(const MyApp());
 }
 
@@ -19,6 +21,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authRepository = SupabaseAuthRepository();
+
     return MaterialApp(
       title: 'Khazana',
       debugShowCheckedModeBanner: false,
@@ -38,40 +42,12 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: BlocProvider(
-        // TODO: Replace with proper repository implementation
         create: (context) => AuthBloc(
-          signInUseCase: SignIn(FakeAuthRepository()),
-          signUpUseCase: SignUp(FakeAuthRepository()),
+          signInUseCase: SignIn(authRepository),
+          signUpUseCase: SignUp(authRepository),
         ),
         child: const LoginPage(),
       ),
     );
-  }
-}
-
-// TODO: Replace with proper repository implementation
-class FakeAuthRepository implements AuthRepository {
-  @override
-  Future<Either<Failure, User>> signIn(String email, String password) {
-    // Implement actual authentication
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, User>> signUp(String email, String password, String name) {
-    // Implement actual authentication
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, void>> signOut() {
-    // Implement actual authentication
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, User?>> getCurrentUser() {
-    // Implement actual authentication
-    throw UnimplementedError();
   }
 }

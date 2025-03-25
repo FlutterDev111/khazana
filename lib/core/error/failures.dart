@@ -13,6 +13,10 @@ abstract class Failure extends Equatable {
   List<Object?> get props => [message, statusCode];
 }
 
+class AuthFailure extends Failure {
+  const AuthFailure({required String message}) : super(message: message);
+}
+
 class ServerFailure extends Failure {
   const ServerFailure({required String message, int? statusCode})
       : super(message: message, statusCode: statusCode);

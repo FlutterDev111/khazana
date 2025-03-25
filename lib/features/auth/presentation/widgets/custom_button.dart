@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomButton extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String text;
   final bool isLoading;
 
@@ -16,7 +16,7 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: isLoading ? null : onPressed,
+      onPressed: isLoading || onPressed == null ? null : onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
