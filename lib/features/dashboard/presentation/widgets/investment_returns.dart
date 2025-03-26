@@ -35,42 +35,56 @@ class _InvestmentReturnsState extends State<InvestmentReturns> {
   }
 
   Widget _buildReturnColumn(String title, double amount, String percentage, double maxAmount) {
-    final double barHeight = 160.0;
+    final double barHeight = 200.0;
     final double normalizedHeight = (amount / maxAmount) * barHeight;
+    final double greenHeight = title == 'Direct Plan' 
+        ? normalizedHeight 
+        : title == 'Category Avg.' 
+            ? normalizedHeight * 0.4 
+            : normalizedHeight * 0.3;
 
     return Column(
       children: [
-        Text(
-          '₹${(amount / 100000).toStringAsFixed(2)}L',
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 8),
-
-
-        SizedBox(
-          height: barHeight,
-          width: 60,
+        Container(
+          height: barHeight + 24,
           child: Stack(
+            alignment: Alignment.bottomCenter,
             children: [
               Container(
-                height: barHeight,
-                width: 60,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF404040),
+                height: normalizedHeight,
+                width: 70,
+                child: Stack(
+                  children: [
+                    Container(
+                      height: normalizedHeight,
+                      width: 70,
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade800,
+
+                      ),
+                    ),
+                    Positioned(
+                      top: 0,
+                      child: Container(
+                        height: greenHeight,
+                        width: 70,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF4CAF50),
+
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Positioned(
-                top: 0,
-                child: Container(
-                  height: normalizedHeight,
-                  width: 60,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF4CAF50),
-
+                bottom: normalizedHeight ,
+                child: Text(
+                  '₹${(amount / 100000).toStringAsFixed(2)}L',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
@@ -78,17 +92,21 @@ class _InvestmentReturnsState extends State<InvestmentReturns> {
           ),
         ),
         Container(
-          width: 115,
-          height: 2,
           color: Colors.white,
+          width: 115.8,
+          height: 2,
         ),
         const SizedBox(height: 12),
-        Text(
-          title,
-          style: GoogleFonts.poppins(
-            color: Colors.grey[400],
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
+        SizedBox(
+          width: 70,
+          child: Text(
+            title,
+            style: GoogleFonts.poppins(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
+            textAlign: TextAlign.center,
           ),
         ),
       ],
@@ -99,6 +117,15 @@ class _InvestmentReturnsState extends State<InvestmentReturns> {
   Widget build(BuildContext context) {
     return BlocBuilder<DashboardBloc, DashboardState>(
       builder: (context, state) {
+        final currentValue = (state.investmentAmount / 100000).toStringAsFixed(1);
+        if (_controller.text != currentValue) {
+          final selection = _controller.selection;
+          _controller.text = currentValue;
+          if (selection.start <= currentValue.length) {
+            _controller.selection = selection;
+          }
+        }
+        
         return Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
@@ -175,11 +202,11 @@ class _InvestmentReturnsState extends State<InvestmentReturns> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 2),
+                      const SizedBox(width: 4),
                       Icon(
-                        Icons.edit,
+                        Icons.edit_outlined,
                         color: Colors.white.withOpacity(0.5),
-                        size: 20,
+                        size: 16,
                       ),
 
                     ],
@@ -210,7 +237,7 @@ class _InvestmentReturnsState extends State<InvestmentReturns> {
                               color: state.investmentType == InvestmentType.oneTime
                                   ? Colors.blue[600]
                                   : Colors.transparent,
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
                               '1-Time',
@@ -239,7 +266,7 @@ class _InvestmentReturnsState extends State<InvestmentReturns> {
                               color: state.investmentType == InvestmentType.monthlySip
                                   ? Colors.blue[600]
                                   : Colors.transparent,
-                              borderRadius: BorderRadius.circular(24),
+                              borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
                               'Monthly SIP',
@@ -307,7 +334,7 @@ class _InvestmentReturnsState extends State<InvestmentReturns> {
                       Text(
                         "This Fund's past returns",
                         style: GoogleFonts.poppins(
-                          color: Colors.grey[400],
+                          color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w400,
                         ),
@@ -316,7 +343,7 @@ class _InvestmentReturnsState extends State<InvestmentReturns> {
                         'Profit % (Absolute Return)',
                         style: GoogleFonts.poppins(
                           color: Colors.grey[600],
-                          fontSize: 14,
+                          fontSize: 12,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -370,6 +397,7 @@ class _InvestmentReturnsState extends State<InvestmentReturns> {
                   ),
                 ],
               ),
+
             ],
           ),
         );

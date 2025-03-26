@@ -25,7 +25,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   ) {
     emit(state.copyWith(isLoading: true));
 
-    // Simulate different data for different years
+
     final Map<String, Map<String, dynamic>> yearData = {
       '2022': {
         'userInvestmentSpots': const [
@@ -136,7 +136,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   ) {
     emit(state.copyWith(isLoading: true));
 
-    // Simulate different data for different time frames
+
     final Map<TimeFrame, Map<String, dynamic>> timeFrameData = {
       TimeFrame.oneMonth: {
         'userInvestmentSpots': const [
@@ -225,6 +225,64 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         ],
         'userInvestmentPercentage': '-19.75%',
         'niftyPercentage': '-12.97%',
+      },
+      TimeFrame.threeYear: {
+        'userInvestmentSpots': const [
+          FlSpot(0, 15),
+          FlSpot(0.4, 35),
+          FlSpot(0.8, 28),
+          FlSpot(1.2, 42),
+          FlSpot(1.6, 38),
+          FlSpot(2.0, 55),
+          FlSpot(2.3, 48),
+          FlSpot(2.6, 65),
+          FlSpot(2.8, 58),
+          FlSpot(3.0, 75),
+        ],
+        'niftySpots': const [
+          FlSpot(0, 20),
+          FlSpot(0.4, 38),
+          FlSpot(0.8, 32),
+          FlSpot(1.2, 45),
+          FlSpot(1.6, 42),
+          FlSpot(2.0, 58),
+          FlSpot(2.3, 52),
+          FlSpot(2.6, 68),
+          FlSpot(2.8, 62),
+          FlSpot(3.0, 80),
+        ],
+        'userInvestmentPercentage': '275.50%',
+        'niftyPercentage': '285.75%',
+      },
+      TimeFrame.max: {
+        'userInvestmentSpots': const [
+          FlSpot(0, 10),
+          FlSpot(0.3, 35),
+          FlSpot(0.6, 28),
+          FlSpot(0.9, 48),
+          FlSpot(1.2, 42),
+          FlSpot(1.5, 65),
+          FlSpot(1.8, 58),
+          FlSpot(2.1, 85),
+          FlSpot(2.4, 78),
+          FlSpot(2.7, 110),
+          FlSpot(3.0, 130),
+        ],
+        'niftySpots': const [
+          FlSpot(0, 15),
+          FlSpot(0.3, 38),
+          FlSpot(0.6, 32),
+          FlSpot(0.9, 52),
+          FlSpot(1.2, 45),
+          FlSpot(1.5, 70),
+          FlSpot(1.8, 62),
+          FlSpot(2.1, 90),
+          FlSpot(2.4, 82),
+          FlSpot(2.7, 115),
+          FlSpot(3.0, 135),
+        ],
+        'userInvestmentPercentage': '395.50%',
+        'niftyPercentage': '405.75%',
       },
     };
 

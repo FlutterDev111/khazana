@@ -46,6 +46,18 @@ class TimePeriodSelector extends StatelessWidget {
                 TimeFrame.oneYear,
                 state?.selectedTimeFrame ?? TimeFrame.oneYear,
               ),
+              _buildTimeFrameButton(
+                context,
+                '3Y',
+                TimeFrame.threeYear,
+                state?.selectedTimeFrame ?? TimeFrame.threeYear,
+              ),
+              _buildTimeFrameButton(
+                context,
+                'Max',
+                TimeFrame.max,
+                state?.selectedTimeFrame ?? TimeFrame.max,
+              ),
             ],
           ),
         );

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-enum TimeFrame { oneMonth, threeMonths, sixMonths, oneYear }
+enum TimeFrame { oneMonth, threeMonths, sixMonths, oneYear, threeYear, max }
 
 enum InvestmentType {
   oneTime,

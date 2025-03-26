@@ -146,22 +146,48 @@ class InvestmentChart extends StatelessWidget {
                               fitInsideVertically: true,
                               showOnTopOfTheChartBoxArea: true,
                               rotateAngle: 0,
-                              tooltipBorder: const BorderSide(color: Colors.transparent),
+                              tooltipBorder: BorderSide(color: Colors.white.withOpacity(0.1)),
                               tooltipRoundedRadius: 8,
+                              tooltipBgColor: const Color(0xFF1A1A1A),
                               tooltipPadding: const EdgeInsets.all(12),
                               tooltipMargin: 0,
                               getTooltipItems: (touchedSpots) {
                                 return touchedSpots.map((spot) {
-                                  return LineTooltipItem(
-                                    spot.bar.color == Colors.blue
-                                        ? 'Your Investment: ₹949.5'
-                                        : 'Nifty Midcap: ₹956.72',
-                                    GoogleFonts.poppins(
-                                      color: spot.bar.color ?? Colors.blue,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  );
+                                  final isFirstSpot = touchedSpots.indexOf(spot) == 0;
+                                  if (isFirstSpot) {
+                                    // First spot shows date and value
+                                    return LineTooltipItem(
+                                      '09-01-2022\n',
+                                      GoogleFonts.poppins(
+                                        color: Colors.grey[400],
+                                        fontSize: 12,
+                                        height: 1.5,
+                                      ),
+                                      children: [
+
+                                        TextSpan(
+                                          text: '- Your Investment: ₹949.31\n',
+                                          style: GoogleFonts.poppins(
+                                            color: Colors.blue,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                            height: 1.5,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: '- Nifty Midcap: ₹956.72',
+                                          style: GoogleFonts.poppins(
+                                            color: Colors.orange,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500,
+                                            height: 1.5,
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }
+                                  // Return null for second spot to avoid duplicate tooltip
+                                  return null;
                                 }).toList();
                               },
                             ),
@@ -240,11 +266,11 @@ class InvestmentChart extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: 8                                                                                                                 ),
         Text(
           percentage,
           style: GoogleFonts.poppins(
-            color: Colors.red[400],
+            color: color,
             fontSize: 12,
             fontWeight: FontWeight.w500,
           ),
