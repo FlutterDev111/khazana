@@ -75,12 +75,6 @@ flutter run
 
 ---
 
-##  Future Enhancements
-- ** Real-time NAV updates** via WebSockets.
-- ** Custom date range selection** for charts.
-- ** Push notifications** for fund price alerts.
-
----
 
 
 
