@@ -1,8 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/usecases/sign_in.dart';
 import '../../domain/usecases/sign_up.dart';
+import '../../domain/entities/user.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
+import '../../../../core/config/supabase_config.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignIn signInUseCase;
@@ -72,18 +74,44 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     SignOutRequested event,
     Emitter<AuthState> emit,
   ) async {
-    emit(state.copyWith(
-      status: AuthStatus.unauthenticated,
-      user: null,
-      errorMessage: null,
-    ));
+    try {
+      emit(state.copyWith(status: AuthStatus.loading));
+      await SupabaseConfig.client.auth.signOut();
+      emit(state.copyWith(
+        status: AuthStatus.unauthenticated,
+        user: null,
+        errorMessage: null,
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        status: AuthStatus.unauthenticated,
+        errorMessage: e.toString(),
+      ));
+    }
   }
 
   Future<void> _onCheckAuthStatus(
     CheckAuthStatus event,
     Emitter<AuthState> emit,
   ) async {
-    // TODO: Implement check auth status
-    emit(state.copyWith(status: AuthStatus.unauthenticated));
+    emit(state.copyWith(status: AuthStatus.loading));
+    
+    try {
+      final session = SupabaseConfig.client.auth.currentSession;
+      if (session != null) {
+        final user = User.fromSupabaseUser(session.user);
+        emit(state.copyWith(
+          status: AuthStatus.authenticated,
+          user: user,
+        ));
+      } else {
+        emit(state.copyWith(status: AuthStatus.unauthenticated));
+      }
+    } catch (e) {
+      emit(state.copyWith(
+        status: AuthStatus.unauthenticated,
+        errorMessage: e.toString(),
+      ));
+    }
   }
 } 

@@ -21,12 +21,10 @@ class AuthState extends ChangeNotifier {
       _isLoading = true;
       notifyListeners();
 
-      // Check if there's a session in SharedPreferences
       final hasLocalSession = await SessionManager.hasSession();
       if (hasLocalSession) {
         final sessionData = await SessionManager.getSession();
         if (sessionData != null && sessionData['access_token'] != null) {
-          // Attempt to recover session using the access token
           try {
             final response = await _supabase.auth.recoverSession(sessionData['access_token'] as String);
             if (response.session != null) {
@@ -35,13 +33,11 @@ class AuthState extends ChangeNotifier {
               await SessionManager.saveUser(response.session!.user);
             }
           } catch (e) {
-            // If session recovery fails, clear local session
             await SessionManager.clearSession();
           }
         }
       }
 
-      // Listen to auth state changes
       _supabase.auth.onAuthStateChange.listen((data) async {
         final AuthChangeEvent event = data.event;
         final Session? session = data.session;

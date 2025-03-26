@@ -24,7 +24,7 @@ class SupabaseAuthRepository implements AuthRepository {
         id: response.user!.id,
         email: response.user!.email!,
         name: response.user!.userMetadata?['name'],
-        photoUrl: response.user!.userMetadata?['avatar_url'],
+        avatarUrl: response.user!.userMetadata?['avatar_url'],
       ));
     } on supabase.AuthException catch (e) {
       return Left(AuthFailure(message: e.message));
@@ -53,7 +53,7 @@ class SupabaseAuthRepository implements AuthRepository {
         id: response.user!.id,
         email: response.user!.email!,
         name: name,
-        photoUrl: null,
+        avatarUrl: null,
       ));
     } on supabase.AuthException catch (e) {
       return Left(AuthFailure(message: e.message));
@@ -84,7 +84,7 @@ class SupabaseAuthRepository implements AuthRepository {
         id: currentUser.id,
         email: currentUser.email!,
         name: currentUser.userMetadata?['name'],
-        photoUrl: currentUser.userMetadata?['avatar_url'],
+        avatarUrl: currentUser.userMetadata?['avatar_url'],
       ));
     } catch (e) {
       return Left(AuthFailure(message: 'Failed to get current user'));

@@ -1,0 +1,1 @@
+ /Users/appletw/Documents/test-task/khazana/.dart_tool/flutter_build/8a7863326db8c27d4d425fa61fe8a49d/native_assets.yaml: 

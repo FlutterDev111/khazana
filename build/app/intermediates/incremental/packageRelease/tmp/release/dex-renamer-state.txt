@@ -1,0 +1,4 @@
+#Wed Mar 26 16:52:26 IST 2025
+base.0=/Users/appletw/Documents/test-task/khazana/build/app/intermediates/dex/release/minifyReleaseWithR8/classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
